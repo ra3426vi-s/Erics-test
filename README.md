@@ -40,7 +40,7 @@
 
 ### Getting an SSL Certificate:
 * First type __sudo su__ for root user
-* Installing certbot with the following commands  __sudo apt update__
+* Installing certbot with the following commands:  __sudo apt update__ ,
    __sudo apt install certbot__
 * To get your SSL certificate from “letsencrypt”  use: 
 __sudo certbot certonly --standalone --email xxxxx@gmail.com -d mydomain.com__
