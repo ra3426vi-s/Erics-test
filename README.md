@@ -12,12 +12,12 @@
 * This is Security Group add HTTP and HTTPS using their drop downs.click on __“Review and Launch”__
 * This leads to creation of a key pair, now select  generate a new key pair and name the key pair as you like, keep the key pair secure since the key pair allows you to securely SSH into your instance. Finally __“Click on launch Instances”__.
 
-Configuring Elastic IP:
--->Now click on  view instances  and you can see the instance running. 
--->On your Ec2 dashboard you can see a section called Elastic iP click on that.
-→ click “Allocate new Address”. Click “Allocate”.
-→ Copy the Ip address and save it. On the top find the  Actions button, click on it and select Associate address.
---> Now you can notice a  drop down Instance and private Ip select what it shows .(if you have multiple  then see which instances are running followed by their ip ).
+### Configuring Elastic IP:
+* Now click on  __view instances__  and you can see the instance running. 
+* On your Ec2 dashboard you can see a section called Elastic iP click on that.
+* Click __“Allocate new Address”__. Click __“Allocate”__.
+* Copy the Ip address and save it. On the top find the __Actions button__, click on it and select __Associate address__.
+* Now you can notice a  drop down Instance and private Ip select what it shows .(if you have multiple  then see which instances are running followed by their ip ).
 
 Configuring Route 53:
 -->Buy a domain either from aws or any other domain hosting company
