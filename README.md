@@ -98,95 +98,95 @@ __sudo certbot certonly --standalone --email xxxxx@gmail.com -d mydomain.com__
 * Here mydomain.com is my domain name. Save this file
 * Test the Nginx  sudo nginx -t where you will get a message : etc/nginx/nginx.conf syntax ok and test is successful
 
-Install GIT:
-->sudo apt install git
--->git --version
--->git clone https://github.com/RocketChat/Docker.Official.Image.git
+### Install GIT:
+* __sudo apt install git__
+* __git --version__
+* __git clone https://github.com/RocketChat/Docker.Official.Image.git__
 
-Install Docker:
--->sudo apt-get update
--->sudo systemctl start docker
--->sudo systemctl enable docker
--->verify the installation sudo systemctl status docker
+### Install Docker:
+* __sudo apt-get update__
+* __sudo systemctl start docker__
+* __sudo systemctl enable docker__
+* __verify the installation sudo systemctl status docker__
 
-Install Docker compose:
---> sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
---> sudo chmod +x /usr/local/bin/docker-compose
+### Install Docker compose:
+* sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+* sudo chmod +x /usr/local/bin/docker-compose
 
-Setting up docker containers:
+### Setting up docker containers:
 
---> sudo mkdir -p /opt/docker/rocket.chat/data/runtime/db
--->sudo mkdir -p /opt/docker/rocket.chat/data/dump
-After these  commands create a docker-compose.yml 
---> sudo nano /opt/docker/rocket.chat/docker-compose.yml
-Copy this and paste it:
- version: '2'
+* __sudo mkdir -p /opt/docker/rocket.chat/data/runtime/db__
+* __sudo mkdir -p /opt/docker/rocket.chat/data/dump__
+* After these  commands create a docker-compose.yml 
+* __sudo nano /opt/docker/rocket.chat/docker-compose.yml__
+* Copy this and paste it:
+*  version: '2'
 
- services:
-   rocketchat:
-     image: rocket.chat:latest
-     command: >
-       bash -c
-         "for i in `seq 1 30`; do
-           node main.js &&
-           s=$$? && break || s=$$?;
-           echo \"Tried $$i times. Waiting 5 secs...\";
-           sleep 5;
-         done; (exit $$s)"
-     restart: unless-stopped
-     volumes:
-       - ./uploads:/app/uploads
-     environment:
-       - PORT=3000
-       - ROOT_URL=https://mydomain.com
-       - MONGO_URL=mongodb://mongo:27017/rocketchat
-       - MONGO_OPLOG_URL=mongodb://mongo:27017/local
-     depends_on:
-       - mongo
-     ports:
-       - 3000:3000
+* services:
+*   rocketchat:
+*      image: rocket.chat:latest
+*     command: >
+*       bash -c
+*         "for i in `seq 1 30`; do
+*            node main.js &&
+*            s=$$? && break || s=$$?;
+*            echo \"Tried $$i times. Waiting 5 secs...\";
+*            sleep 5;
+*          done; (exit $$s)"
+*    restart: unless-stopped
+*      volumes:
+*       - ./uploads:/app/uploads
+*     environment:
+*       - PORT=3000
+*       - ROOT_URL=https://mydomain.com
+*       - MONGO_URL=mongodb://mongo:27017/rocketchat
+*       - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+*     depends_on:
+*      - mongo
+*     ports:
+*       - 3000:3000
 
-   mongo:
-     image: mongo:4.0
-     restart: unless-stopped
-     command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
-     volumes:
-       - ./data/runtime/db:/data/db
-       - ./data/dump:/dump
+*   mongo:
+*     image: mongo:4.0
+*     restart: unless-stopped
+*     command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
+*     volumes:
+*       - ./data/runtime/db:/data/db
+*       - ./data/dump:/dump
 
-   # this container's job is just to run the command to initialize the replica set.
+*   #this container's job is just to run the command to initialize the replica set.
   
-   mongo-init-replica:
-     image: mongo:4.0
-     command: >
-       bash -c
-         "for i in `seq 1 30`; do
-           mongo mongo/rocketchat --eval \"
-             rs.initiate({
-               _id: 'rs0',
-               members: [ { _id: 0, host: 'localhost:27017' } ]})\" &&
-           s=$$? && break || s=$$?;
-           echo \"Tried $$i times. Waiting 5 secs...\";
-           sleep 5;
-         done; (exit $$s)"
-     depends_on:
-     - mongo
+*   mongo-init-replica:
+*     image: mongo:4.0
+*     command: >
+*       bash -c
+*         "for i in `seq 1 30`; do
+*           mongo mongo/rocketchat --eval \"
+*             rs.initiate({
+*               _id: 'rs0',
+*               members: [ { _id: 0, host: 'localhost:27017' } ]})\" &&
+*           s=$$? && break || s=$$?;
+*           echo \"Tried $$i times. Waiting 5 secs...\";
+*           sleep 5;
+*         done; (exit $$s)"
+*     depends_on:
+*     - mongo
 
-After the above Start the container by 
--->cd /opt/docker/rocket.chat
--->sudo docker-compose up -d
-The above two will start rocket chat and mongo db 
+* After the above Start the container by 
+   * __cd /opt/docker/rocket.chat__
+   * __sudo docker-compose up -d__
+* The above two will start rocket chat and mongo db 
  
-Individual Containers:
-First, start an instance of mongo:
--->docker run --name db -d mongo:4.0 mongod --smallfiles
-Then start Rocket.Chat linked to this mongo instance:
--->docker run --name rocketchat --link db:db -d rocket.chat
+### Individual Containers:
+*First, start an instance of mongo:
+ __docker run --name db -d mongo:4.0 mongod --smallfiles__
+* Then start Rocket.Chat linked to this mongo instance:
+ __docker run --name rocketchat --link db:db -d rocket.chat__
 
-This will start a Rocket.Chat instance listening on the default Meteor port of 3000 on the container.If you'd like  to access the instance directly at standard port on the host machine:
--->docker run --name rocketchat -p 80:3000 --env ROOT_URL=http://mydomain --link db:db -d rocket.chat
-Then, access it via http://localhost in a browser. Replace localhost in ROOT_URL with your own domain name if you are hosting at your own domain.
-Final:
+* This will start a Rocket.Chat instance listening on the default Meteor port of 3000 on the container.If you'd like  to access the instance directly at standard port on the host machine:
+*  __docker run --name rocketchat -p 80:3000 --env ROOT_URL=http://mydomain --link db:db -d rocket.chat__
+* Then, access it via http://localhost in a browser. Replace localhost in ROOT_URL with your own domain name if you are hosting at your own domain.
+* Finally:
 Login to your site at https://mydomain.com ---it is finally deployed on aws.
 
 
