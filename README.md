@@ -119,7 +119,7 @@ __sudo certbot certonly --standalone --email xxxxx@gmail.com -d mydomain.com__
 * __sudo mkdir -p /opt/docker/rocket.chat/data/dump__
 * After these  commands create a docker-compose.yml 
 * __sudo nano /opt/docker/rocket.chat/docker-compose.yml__
-* Copy this and paste it:
+* Copy this and paste it below :
 *  version: '2'
 
 * services:
