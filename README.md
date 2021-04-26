@@ -110,8 +110,8 @@ __sudo certbot certonly --standalone --email xxxxx@gmail.com -d mydomain.com__
 * __verify the installation sudo systemctl status docker__
 
 ### Install Docker compose:
-* sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-* sudo chmod +x /usr/local/bin/docker-compose
+* __sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose__
+* __sudo chmod +x /usr/local/bin/docker-compose__
 
 ### Setting up docker containers:
 
