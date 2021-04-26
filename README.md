@@ -19,39 +19,39 @@
 * Copy the Ip address and save it. On the top find the __Actions button__, click on it and select __Associate address__.
 * Now you can notice a  drop down Instance and private Ip select what it shows .(if you have multiple  then see which instances are running followed by their ip ).
 
-Configuring Route 53:
--->Buy a domain either from aws or any other domain hosting company
---> Go to create hosted zone on dashboard of route 53
--->Create Record set 
---> type : Cname, value: Public Dns .
+### Configuring Route 53:
+* Buy a domain either from aws or any other domain hosting company
+* Go to create hosted zone on dashboard of route 53
+* Create Record set 
+* type : __Cname__, value: __Public Dns__ .
 
-Connecting to your instance:
+### Connecting to your instance:
 
--->Go to your Instance and  click connect, go to SSH client and follow the steps. 
---> open your terminal(linux) or putty for windows.
--->Now connect to your server using chmod 400 “Your key” this command is executable only if your in the same directory of your key present.
---> SSH the command, copy and paste it in your terminal  and say yes for connecting.
--->Congratulations  you are  logged into your server. 
-
-
+* Go to your Instance and  click connect, go to SSH client and follow the steps. 
+* open your terminal(linux) or putty for windows.
+* Now connect to your server using __chmod 400 “Your key”__ this command is executable only if your in the same directory of your key present.
+* SSH the command, copy and paste it in your terminal  and say yes for connecting.
+* Congratulations  you are  logged into your server. 
 
 
-Deployment Rocket chat:
-
-Getting an SSL Certificate:
--->First type sudo su for root user
--->Installing certbot with the following commands  sudo apt update
- sudo apt install certbot
--->To get your SSL certificate from “letsencrypt”  use: 
-sudo certbot certonly --standalone --email xxxxx@gmail.com -d mydomain.com
-So,  etc/letsencrypt/archive creates 4 pem  files
-Cert.pem
-Fullchain.pem------(admins certificate file)
-Chain.pem
-Privkey.pem---------(certificate key file)
 
 
-Configure Nginx web server :
+## Deployment Rocket chat:
+
+### Getting an SSL Certificate:
+* First type __sudo su__ for root user
+* Installing certbot with the following commands  __sudo apt update__
+   __sudo apt install certbot__
+* To get your SSL certificate from “letsencrypt”  use: 
+__sudo certbot certonly --standalone --email xxxxx@gmail.com -d mydomain.com__
+* So,  etc/letsencrypt/archive creates 4 pem  files
+   * Cert.pem
+   * Fullchain.pem------(admins certificate file)
+   * Chain.pem
+   * Privkey.pem---------(certificate key file)
+
+
+### Configure Nginx web server :
 
 -->Now sudo apt-get Install nginx
 -->Enable it by sudo ufw enable and say yes to it
