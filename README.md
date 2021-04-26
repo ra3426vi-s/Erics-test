@@ -1,16 +1,16 @@
 # Erics-test
 
-Installation of Rocket chat Aws:
-Setting up the Aws environment:
+## Installation of Rocket chat Aws:
+### Setting up the Aws environment:
 
--->First set up an Aws account on Amazon web services.
--->After setting it up go to “open Ec2 service ”,click on Instances to the left side of your Ec2 dashboard and select an Ec2 instance.
--->Now go to the search bar and search for “Ubuntu Server 18.04 LTS” with 64 -bit (x86) Architecture.
--->Select your instance(t2 -medium) and click “Next: Configure Instance “
--->Keep it default in the storage or choose your storage according to your usage.
--->In this section set everything as  default.click “Next “
--->This is Security Group add HTTP and HTTPS using their drop downs.click on “Review and Launch”
--->This leads to creation of a key pair, now select  generate a new key pair and name the key pair as you like, keep the key pair secure since the key pair allows you to securely SSH into your instance. Finally “Click on launch Instances”.
+* First set up an Aws account on Amazon web services.
+* After setting it up go to __“open Ec2 service ”__,click on Instances to the left side of your Ec2 dashboard and select an Ec2 instance.
+* Now go to the search bar and search for __“Ubuntu Server 18.04 LTS”__ with 64 -bit (x86) Architecture.
+* Select your instance(t2 -medium) and click __“Next: Configure Instance “__
+* Keep it default in the storage or choose your storage according to your usage.
+* In this section set everything as  default.click __“Next “__
+* This is Security Group add HTTP and HTTPS using their drop downs.click on __“Review and Launch”__
+* This leads to creation of a key pair, now select  generate a new key pair and name the key pair as you like, keep the key pair secure since the key pair allows you to securely SSH into your instance. Finally __“Click on launch Instances”__.
 
 Configuring Elastic IP:
 -->Now click on  view instances  and you can see the instance running. 
