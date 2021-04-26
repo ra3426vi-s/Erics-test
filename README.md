@@ -53,50 +53,50 @@ __sudo certbot certonly --standalone --email xxxxx@gmail.com -d mydomain.com__
 
 ### Configure Nginx web server :
 
--->Now sudo apt-get Install nginx
--->Enable it by sudo ufw enable and say yes to it
---> Lets check the status by sudo ufw status and see the status : Active
--->sudo ufw app list gives list of available applications
--->Now if you want all then sudo ufw allow ‘nginx full’  ( for individual application change with ‘nginx name_app’)
--->Type sudo ufw status to see available applications along with where and action.
--->Type systemctl status nginx this function shows green light enabled and is active for both  webserver and reverse proxy. This statement conveys that the ip address of our ipv4 has started working.
--->Check by typing ipv4 address on any browser on our computer and you can see it.
---> Backup the default config file using cd /etc/nginx/sites-available followed with sudo mv default default.reference
--->Creating a new site configuration for Rocket.Chat 
-sudo nano etc/nginx/sites-available/default which will open a blank file and paste the following given below
-server {
-listen 443 ssl;
-server_name mydomain.com;
-ssl_certificate /etc/letsencrypt/live/mydomain.com/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/mydomain.com/privkey.pem;
-ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-ssl_prefer_server_ciphers on;
-ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
-root /usr/share/nginx/html;
-index index.html index.htm;
-# Make site accessible from http://localhost/
-server_name localhost;
-location / {
-proxy_pass http://localhost:3000/;
-proxy_http_version 1.1;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-proxy_set_header Host $http_host;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header X-Forwarded-Proto http;
-proxy_set_header X-Nginx-Proxy true;
-proxy_redirect off;
-}
-}
-server {
-listen 80;
-server_name mydomain.com;
-return 301 https://$host$request_uri;
-}
+* Now __sudo apt-get Install nginx__
+* Enable it by __sudo ufw enable__ and say yes to it
+* Lets check the status by __sudo ufw status__ and see the __status : Active__
+* __sudo ufw app__ list gives list of available applications
+* Now if you want all then __sudo ufw allow ‘nginx full’__  ( for individual application change with ‘nginx name_app’)
+* Type __sudo ufw status__ to see available applications along with where and action.
+* Type __systemctl status nginx__ this function shows green light enabled and is active for both  webserver and reverse proxy. This statement conveys that the ip address of our ipv4 has started working.
+* Check by typing ipv4 address on any browser on our computer and you can see it.
+*  Backup the default config file using cd /etc/nginx/sites-available followed with sudo mv default default.reference
+* Creating a new site configuration for Rocket.Chat 
+* __sudo nano etc/nginx/sites-available/default__ which will open a blank file and paste the following given below
+* server {
+* listen 443 ssl;
+* server_name mydomain.com;
+* ssl_certificate /etc/letsencrypt/live/mydomain.com/fullchain.pem;
+* ssl_certificate_key /etc/letsencrypt/live/mydomain.com/privkey.pem;
+* ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+* ssl_prefer_server_ciphers on;
+* ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+* root /usr/share/nginx/html;
+* index index.html index.htm;
+* #Make site accessible from http://localhost/
+* server_name localhost;
+* location / {
+* proxy_pass http://localhost:3000/;
+* proxy_http_version 1.1;
+* proxy_set_header Upgrade $http_upgrade;
+* proxy_set_header Connection "upgrade";
+* proxy_set_header Host $http_host;
+* proxy_set_header X-Real-IP $remote_addr;
+* proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+* proxy_set_header X-Forwarded-Proto http;
+* proxy_set_header X-Nginx-Proxy true;
+* proxy_redirect off;
+* }
+* }
+* server {
+* listen 80;
+* server_name mydomain.com;
+* return 301 https://$host$request_uri;
+* }
 
--->Here mydomain.com is my domain name. Save this file
--->Test the Nginx  sudo nginx -t where you will get a message : etc/nginx/nginx.conf syntax ok and test is successful
+* Here mydomain.com is my domain name. Save this file
+* Test the Nginx  sudo nginx -t where you will get a message : etc/nginx/nginx.conf syntax ok and test is successful
 
 Install GIT:
 ->sudo apt install git
