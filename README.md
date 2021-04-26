@@ -1,6 +1,6 @@
-# Erics-test
 
-## Installation of Rocket chat Aws:
+
+# Installation of Rocket chat Aws:
 ### Setting up the Aws environment:
 
 * First set up an Aws account on Amazon web services.
@@ -36,7 +36,7 @@
 
 
 
-## Deployment Rocket chat:
+# Deployment Rocket chat:
 
 ### Getting an SSL Certificate:
 * First type __sudo su__ for root user
@@ -195,50 +195,50 @@ Login to your site at https://mydomain.com ---it is finally deployed on aws.
 
 
 
-How to remove the deployment and cleanup all resources created for it:
+# How to remove the deployment and cleanup all resources created for it:
 
--->Remove Docker(images,containers and volumes):
-sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce
-The above command will not remove images, containers, volumes, or user created configuration files on your host. If you wish to delete all images, containers, and volumes run the following commands:
-sudo rm -rf /var/lib/docker /etc/docker 
-sudo rm /etc/apparmor.d/docker sudo groupdel docker
- sudo rm -rf /var/run/docker.sock
+ ### Remove Docker(images,containers and volumes):
+* __sudo apt-get autoremove -y --purge docker-engine docker docker.io docker-ce__
+* The above command will not remove images, containers, volumes, or user created configuration files on your host. If you wish to delete all images, containers, and volumes run the following commands:
+* __sudo rm -rf /var/lib/docker /etc/docker__ 
+*__sudo rm /etc/apparmor.d/docker sudo groupdel docker__
+* __sudo rm -rf /var/run/docker.sock__
  
--->Remove Git :
-sudo apt-get remove --auto-remove (git all dependency packages too)
-To delete configuration and/or data files of git and it's dependencies execute:$ sudo apt-get purge --auto-remove git
+### Remove Git :
+*__sudo apt-get remove --auto-remove__ (git all dependency packages too)
+* To delete configuration and/or data files of git and it's dependencies execute:__$ sudo apt-get purge --auto-remove git__
  
--->Remove Ngnix:
-sudo apt purge nginx 
+# Remove Ngnix:
+__sudo apt purge nginx__ 
 This commands deletes all configurations .
  
--->Remove Certbot:
-sudo certbot delete
+# Remove Certbot:
+__sudo certbot delete__
  
-Remove certbot files manually
-sudo rm -rf /etc/letsencrypt/
-sudo rm -rf /var/lib/letsencrypt/
-sudo rm -rf /var/log/letsencrypt/
+# Remove certbot files manually
+* __sudo rm -rf /etc/letsencrypt/__
+* __sudo rm -rf /var/lib/letsencrypt/__
+* __sudo rm -rf /var/log/letsencrypt/__
  
-Make sure the repo is updated and autoremove
-sudo apt update
-sudo apt upgrade
-sudo apt autoremove
- 
- 
- 
-These steps can clean up everything that was created.
+# Make sure the repo is updated and autoremove
+*__sudo apt update__
+*__sudo apt upgrade__
+*__sudo apt autoremove__
  
  
  
-Additional methods:
+* These steps can clean up everything that was created.
  
--->Remove Docker compose:
-sudo rm $(which docker-compose)
+ 
+ 
+## Additional methods:
+ 
+# Remove Docker compose:
+__sudo rm $(which docker-compose)__
 
--->Remove all docker containers:
-Clean Docker and start from scratch, enter the command:
-docker container stop $(docker container ls –aq) && docker system prune –af ––volumes
+# Remove all docker containers:
+* Clean Docker and start from scratch, enter the command:
+ __docker container stop $(docker container ls –aq) && docker system prune –af ––volumes__
  
  
  
