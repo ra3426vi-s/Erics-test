@@ -93,54 +93,163 @@ __git clone https://github.com/RocketChat/Docker.Official.Image into your reposi
 * __fi__
 * with this setup +configuring IAM--->made finally to deploy on EC2 from codepipeline
 
-### Deployment on aws Ec2instance:
+### Deployment on aws Ec2instance using codedeploy:
 
-First go to the search toolbar and type IAM Role
-Here we have to create 2 differnet roles one for code deploy and another for EC2 instance
-Choose role which is present on the left side of the dashboard and select EC2
-Next select EC2 and choose  roles for cloning the github on your instance.
-Tag as name and value as EC2cosedeploy .these steps make it ready for EC2
-similarly create for codedeploy selecting aws access code deploy role and tag as name and value as codedeployrole.
+* First go to the search toolbar and type IAM Role
+* Here we have to create 2 differnet roles one for code deploy and another for EC2 instance
+* Choose role which is present on the left side of the dashboard and select EC2
+* Next select EC2 and choose  roles for cloning the github on your instance.
+* Tag as name and value as EC2cosedeploy .these steps make it ready for EC2
+* similarly create for codedeploy selecting aws access code deploy role and tag as name and value as codedeployrole.
 
-Create instance, scroll down and  see i am a role in the dropdown select it and give the following  as a text
-yum -y update 
-yum install -y ruby 
-yum install -y aws-cli 
-cd /home/ec2-user wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install chmod +x ./install ./install auto
 
-The above code installs the CodeDeploy agent on your instance as it is created.
+### Setting up the Aws environment:
+
+* First set up an Aws account on Amazon web services.
+* After setting it up go to __“open Ec2 service ”__,click on Instances to the left side of your Ec2 dashboard and select an Ec2 instance.
+* Now go to the search bar and search for __“Ubuntu Server 18.04 LTS”__ with 64 -bit (x86) Architecture.
+* Select your instance(t2 -medium) and click __“Next: Configure Instance “__
+* In this section scroll down and  see i am a role in the dropdown select it and give the following  as a text
+* __yum -y update__
+* __yum install -y ruby__ 
+* __yum install -y aws-cli__ 
+* __cd /home/ec2-user wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install chmod +x ./install ./install auto__
+
+* The above code installs the CodeDeploy agent on your instance as it is created.
+* In the storage or choose your storage according to your usage.
+* In this section set everything as  default.click __“Next “__
+* This is Security Group add HTTP and HTTPS using their drop downs.click on __“Review and Launch”__
+* This leads to creation of a key pair, now select  generate a new key pair and name the key pair as you like, keep the key pair secure since the key pair allows you to securely SSH into your instance. Finally __“Click on launch Instances”__.
+
+### Configuring Elastic IP:
+* Now click on  __view instances__  and you can see the instance running. 
+* On your Ec2 dashboard you can see a section called Elastic iP click on that.
+* Click __“Allocate new Address”__. Click __“Allocate”__.
+* Copy the Ip address and save it. On the top find the __Actions button__, click on it and select __Associate address__.
+* Now you can notice a  drop down Instance and private Ip select what it shows .(if you have multiple  then see which instances are running followed by their ip ).
+
+### Configuring Route 53:
+* Buy a domain either from aws or any other domain hosting company
+* Go to create hosted zone on dashboard of route 53
+* Create Record set 
+* type : __Cname__, value: __Public Dns__ .
+
+
  
-Now it is time to Code deploy:
+### Now it is time to Code deploy:
 
-Type Code Deploy on services toolbar
-now you can see the code deploy dashboard in that select applications and create application.
-Name your application as rocketapp and platform to deploy as EC2 with this application is created
-
-
-Now deployment group has to be set 
-now go through all dropdown and choose EC2 insatnce and tag name as your EC2 instance name, no need for load balancer this will create a deployment group.
-
-Last step create a codepipeline:
-choose the name of your pipline
-click on next ,source provider : choose git and follow steps and choose the repo which has your deployment file.
-Bild provider keeop it as default and in deployer part  choose code deploy. And this is enough to set your codepipeline
-
-finally start the deployment after a couple of min you can see the deployment success that means you have succesfully deployed rocketchat on your instance.
+* Type Code Deploy on services toolbar
+* Now you can see the code deploy dashboard in that select applications and create application.
+* Name your application as rocketapp and platform to deploy as EC2 with this application is created
 
 
+### Now deployment group has to be set 
+* Now go through all dropdown and choose EC2 insatnce and tag name as your EC2 instance name, no need for load balancer this will create a deployment group.
+
+### Last step create a codepipeline:
+* choose the name of your pipline
+* click on next ,source provider : choose git and follow steps and choose the repo which has your deployment file.
+* Bild provider keeop it as default and in deployer part  choose code deploy. And this is enough to set your codepipeline
+
+* finally start the deployment after a couple of min you can see the deployment success that means you have succesfully deployed rocketchat on your instance.
 
 
 
 
-TO clean up:
-Sign in to the AWS Management Console and open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
-    1. In the navigation pane, under Instances, choose Instances.
-    2. Select the box next to the Amazon EC2 instance you want to terminate. In the Actionsmenu, point to Instance State, and then choose Terminate.
-    3. When prompted, choose Yes, Terminate.
 
 
+### TO clean up:
+* Sign in to the AWS Management Console and open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+*    1. In the navigation pane, under Instances, choose Instances.
+*    2. Select the box next to the Amazon EC2 instance you want to terminate. In the Actionsmenu, point to Instance State, and then choose Terminate.
+*    3. When prompted, choose Yes, Terminate.
+#### Default file
+* server {
+* listen 443 ssl;
+* server_name mydomain.com;
+* ssl_certificate /etc/letsencrypt/live/mydomain.com/fullchain.pem;
+* ssl_certificate_key /etc/letsencrypt/live/mydomain.com/privkey.pem;
+* ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+* ssl_prefer_server_ciphers on;
+* ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+* root /usr/share/nginx/html;
+* index index.html index.htm;
+* #Make site accessible from http://localhost/
+* server_name localhost;
+* location / {
+* proxy_pass http://localhost:3000/;
+* proxy_http_version 1.1;
+* proxy_set_header Upgrade $http_upgrade;
+* proxy_set_header Connection "upgrade";
+* proxy_set_header Host $http_host;
+* proxy_set_header X-Real-IP $remote_addr;
+* proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+* proxy_set_header X-Forwarded-Proto http;
+* proxy_set_header X-Nginx-Proxy true;
+* proxy_redirect off;
+* }
+* }
+* server {
+* listen 80;
+* server_name mydomain.com;
+* return 301 https://$host$request_uri;
+* }
 
-##Manual Method
+#### Docker1.yml
+*  version: '2'
+
+* services:
+*   rocketchat:
+*      image: rocket.chat:latest
+*     command: >
+*       bash -c
+*         "for i in `seq 1 30`; do
+*            node main.js &&
+*            s=$$? && break || s=$$?;
+*            echo \"Tried $$i times. Waiting 5 secs...\";
+*            sleep 5;
+*          done; (exit $$s)"
+*    restart: unless-stopped
+*      volumes:
+*       - ./uploads:/app/uploads
+*     environment:
+*       - PORT=3000
+*       - ROOT_URL=https://mydomain.com
+*       - MONGO_URL=mongodb://mongo:27017/rocketchat
+*       - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+*     depends_on:
+*      - mongo
+*     ports:
+*       - 3000:3000
+
+*   mongo:
+*     image: mongo:4.0
+*     restart: unless-stopped
+*     command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
+*     volumes:
+*       - ./data/runtime/db:/data/db
+*       - ./data/dump:/dump
+
+*   #this container's job is just to run the command to initialize the replica set.
+  
+*   mongo-init-replica:
+*     image: mongo:4.0
+*     command: >
+*       bash -c
+*         "for i in `seq 1 30`; do
+*           mongo mongo/rocketchat --eval \"
+*             rs.initiate({
+*               _id: 'rs0',
+*               members: [ { _id: 0, host: 'localhost:27017' } ]})\" &&
+*           s=$$? && break || s=$$?;
+*           echo \"Tried $$i times. Waiting 5 secs...\";
+*           sleep 5;
+*         done; (exit $$s)"
+*     depends_on:
+*     - mongo
+
+
+## Manual Method
 ### Setting up the Aws environment:
 
 * First set up an Aws account on Amazon web services.
