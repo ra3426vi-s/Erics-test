@@ -1,7 +1,7 @@
 
 
 # Installation of Rocket chat Aws:
-## Automated Method
+## Automated Method from codedeploy with Codepipeline 
 ### Build the required for automate deploy:
 #### Gitsetup
 
