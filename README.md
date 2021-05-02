@@ -248,7 +248,7 @@ __git clone https://github.com/RocketChat/Docker.Official.Image into your reposi
 *     depends_on:
 *     - mongo
 
-
+<!---
 ## Manual Method
 ### Setting up the Aws environment:
 
@@ -488,6 +488,7 @@ __sudo rm $(which docker-compose)__
 # Remove all docker containers:
 * Clean Docker and start from scratch, enter the command:
  __docker container stop $(docker container ls –aq) && docker system prune –af ––volumes__
+-->
  
  
  
