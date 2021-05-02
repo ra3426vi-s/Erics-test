@@ -1,6 +1,146 @@
 
 
 # Installation of Rocket chat Aws:
+## Automated Method
+### Build the required for automate deploy:
+#### Gitsetup
+
+* First step is to set up  create a git repository of what you want to deploy.
+* So the git repository should contain the lisence.txt,appspec.yml, and the contentfolders. 
+* After setting up these files also make an zip file of these and upload to the github of yours.
+* So accordingly
+__git clone https://github.com/RocketChat/Docker.Official.Image into your repository.__
+* So your reository must look like
+* /ra3426vi-s
+*   └-- MyDemoRepo
+*       │-- appspec.yml
+*       │-- index.html
+*       │-- LICENSE.txt(since ubuntu machine needs liscences)
+*       └-- scripts
+*           │-- install_dependencies
+*           │-- after_install
+*           └-- start_server
+
+* Next, to launch the deployment from codepipeline with codedeploy  
+
+* Now lets see  and understand how appspec.yml
+* version: 0.0
+* os: linux
+* files:
+*  - source: /index.html
+*    destination: bin/var/data
+* hooks:
+*  BeforeInstall:
+*    - location: scripts/install_dependencies
+*      timeout: 300
+*      runas: root
+*  AfterInstall:      
+*    - location: scripts/after_install
+*      timeout: 300
+*      runas: root
+* ApplicationStart:      
+*    - location: scripts/start_server
+*      timeout: 300
+*      runas: root
+
+
+* -source says what file i have to take from github and where ishould depoy it if the deployment path does’nt exist it will create the directory and copies the file  .First checking source and destination directories if it doesn’t match then it creates it.
+
+* -hooks :Hooks allow you to specify scripts to run during each of the CodeDeploy events. There are five events you can listen to:
+
+* ApplicationStop, which occurs at the start of a deployment operation.
+* BeforeInstall, which occurs before any files specified in the appspec.yml are deployed to their destinations.
+* AfterInstall, which occurs after files have been deployed.
+* ApplicationStart, which happens after installation is complete
+* ValidateService, which happens after the application has been started.
+
+* Accordingly first we will install dependencies so create a file under scripts name as install_dependencies
+* so accordingly {getting nginx,git,docker,dockercompose and setting up all required dependencies and docker containers.}
+* __#!/bin/bash__
+* __sudo apt update__
+* __sudo apt-get Install nginx__
+* __sudo apt install git__
+* __sudo apt install curl__
+* __curl -fsSL https://get.docker.com/ | sh__
+* __sudo curl -L "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+* __if [ ! -d "/usr/local/bin/docker-compose" ];then__
+*    __sudo chmod +x /usr/local/bin/docker-compose__
+* __fi
+* __if [ ! -d "/opt/docker/rocket.chat/data/runtime/db" ];then__
+*   __sudo mkdir -p /opt/docker/rocket.chat/data/runtime/db__
+* __fi__
+* __if [ ! -d "/opt/docker/rocket.chat/data/dump" ];then__
+*   __sudo mkdir -p/opt/docker/rocket.chat/data/dump__
+* __fi
+
+Now lets set up for after install:setup docker-compose file and setting up the domain . The code is uploaded into the github in the name of deafult1 and docker-compose1.yml.
+#!/bin/bash
+sudo certbot certonly --standalone --email xxxxx@gmail.com -d mydomain.com
+(
+    cd /etc/nginx/sites-available/
+    cp default1 default
+    cd opt/docker/rocket.chat/
+    cp docker-compose1.yml docker-compose.yml
+ )
+Finally start server using
+#!/bin/bash
+service ngnix start
+if [ ! -d "/cd /opt/docker/rocket.chat" ];then
+    docker-compose up -d 
+    docker run --name db -d mongo:4.0 mongod --smallfiles
+    docker run --name rocketchat -p 80:3000 --env ROOT_URL=http://mydomain --link db:db -d rocket.chat
+   
+fi
+with this setup +configuring IAM--->made finally to deploy on EC2 from codepipeline
+
+Deployment on aws Ec2instance:
+
+First go to the search toolbar and type IAM Role
+Here we have to create 2 differnet roles one for code deploy and another for EC2 instance
+Choose role which is present on the left side of the dashboard and select EC2
+Next select EC2 and choose  roles for cloning the github on your instance.
+Tag as name and value as EC2cosedeploy .these steps make it ready for EC2
+similarly create for codedeploy selecting aws access code deploy role and tag as name and value as codedeployrole.
+
+Create instance, scroll down and  see i am a role in the dropdown select it and give the following  as a text
+yum -y update 
+yum install -y ruby 
+yum install -y aws-cli 
+cd /home/ec2-user wget https://aws-codedeploy-us-east-2.s3.us-east-2.amazonaws.com/latest/install chmod +x ./install ./install auto
+
+The above code installs the CodeDeploy agent on your instance as it is created.
+ 
+Now it is time to Code deploy:
+
+Type Code Deploy on services toolbar
+now you can see the code deploy dashboard in that select applications and create application.
+Name your application as rocketapp and platform to deploy as EC2 with this application is created
+
+
+Now deployment group has to be set 
+now go through all dropdown and choose EC2 insatnce and tag name as your EC2 instance name, no need for load balancer this will create a deployment group.
+
+Last step create a codepipeline:
+choose the name of your pipline
+click on next ,source provider : choose git and follow steps and choose the repo which has your deployment file.
+Bild provider keeop it as default and in deployer part  choose code deploy. And this is enough to set your codepipeline
+
+finally start the deployment after a couple of min you can see the deployment success that means you have succesfully deployed rocketchat on your instance.
+
+
+
+
+
+
+TO clean up:
+Sign in to the AWS Management Console and open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+    1. In the navigation pane, under Instances, choose Instances.
+    2. Select the box next to the Amazon EC2 instance you want to terminate. In the Actionsmenu, point to Instance State, and then choose Terminate.
+    3. When prompted, choose Yes, Terminate.
+
+
+
+##Manual Method
 ### Setting up the Aws environment:
 
 * First set up an Aws account on Amazon web services.
