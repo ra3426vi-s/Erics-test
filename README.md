@@ -73,27 +73,27 @@ __git clone https://github.com/RocketChat/Docker.Official.Image into your reposi
 *   __sudo mkdir -p/opt/docker/rocket.chat/data/dump__
 * __fi
 
-Now lets set up for after install:setup docker-compose file and setting up the domain . The code is uploaded into the github in the name of deafult1 and docker-compose1.yml.
-#!/bin/bash
-sudo certbot certonly --standalone --email xxxxx@gmail.com -d mydomain.com
-(
-    cd /etc/nginx/sites-available/
-    cp default1 default
-    cd opt/docker/rocket.chat/
-    cp docker-compose1.yml docker-compose.yml
- )
-Finally start server using
-#!/bin/bash
-service ngnix start
-if [ ! -d "/cd /opt/docker/rocket.chat" ];then
-    docker-compose up -d 
-    docker run --name db -d mongo:4.0 mongod --smallfiles
-    docker run --name rocketchat -p 80:3000 --env ROOT_URL=http://mydomain --link db:db -d rocket.chat
+* Now lets set up for after install:setup docker-compose file and setting up the domain . The code is uploaded into the github in the name of deafult1 and docker-compose1.yml.
+* __#!/bin/bash__
+* __sudo certbot certonly --standalone --email xxxxx@gmail.com -d mydomain.com__
+* (
+*    __cd /etc/nginx/sites-available/__
+*    __cp default1 default__
+*    __cd opt/docker/rocket.chat/__
+*    __cp docker-compose1.yml docker-compose.yml__
+* )
+### Finally start server using
+* __!/bin/bash__
+* __service ngnix start__
+* __if [ ! -d "/cd /opt/docker/rocket.chat" ];then__
+*    __docker-compose up -d__ 
+*    __docker run --name db -d mongo:4.0 mongod --smallfiles__
+*    __docker run --name rocketchat -p 80:3000 --env ROOT_URL=http://mydomain --link db:db -d rocket.chat__
    
-fi
-with this setup +configuring IAM--->made finally to deploy on EC2 from codepipeline
+* __fi__
+* with this setup +configuring IAM--->made finally to deploy on EC2 from codepipeline
 
-Deployment on aws Ec2instance:
+### Deployment on aws Ec2instance:
 
 First go to the search toolbar and type IAM Role
 Here we have to create 2 differnet roles one for code deploy and another for EC2 instance
